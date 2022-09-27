@@ -4,6 +4,10 @@
 #pragma once
 #include "TapQuoteAPI.h"
 #include "SimpleEvent.h"
+#include <vector>
+#include <map>
+#include <string>
+using namespace std;
 
 class QuoteSpi : public ITapQuoteAPINotify
 {
@@ -14,6 +18,8 @@ public:
 	~QuoteSpi(void);
 
 	void Run();
+
+    int SubscribeQuote(string contract);
 
     int Init();
 
@@ -124,5 +130,11 @@ private:
 	TAPIUINT32	   m_uiSessionID;
     SimpleEvent    m_Event;
 	bool		   m_bIsAPIReady;
+    vector<char*>  m_SHFEList;
+    vector<char*>  m_CZCEList;
+    vector<char*>  m_DCEList;
+    vector<char*>  m_CFFEXList;
+    map< const char*, vector<char*> > m_ExchangeMap;
+
 };
 #endif //ESUNNY_QUOTESPI_H

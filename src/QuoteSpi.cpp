@@ -2,13 +2,40 @@
 #include "TapAPIError.h"
 #include <iostream>
 #include <cstring>
+#include <string>
+#include <regex>
 
 using namespace std;
 
 QuoteSpi::QuoteSpi(void):
         m_pAPI(NULL),
-        m_bIsAPIReady(false)
+        m_bIsAPIReady(false),
+        m_uiSessionID(0)
+
 {
+    char* SHFEContract[] = {
+            (char*)"AG",
+            (char*)"AL",
+            (char*)"AU",
+            (char*)"BU",
+            (char*)"CU",
+            (char*)"FU",
+            (char*)"HC",
+            (char*)"NI",
+            (char*)"PB",
+            (char*)"RB",
+            (char*)"RU",
+            (char*)"SN",
+            (char*)"SP",
+            (char*)"SS",
+            (char*)"WR",
+            (char*)"ZN",
+    };
+    for (int i = 0; i < sizeof(SHFEContract) / sizeof(SHFEContract[0]); i++)
+    {
+        m_SHFEList.push_back(SHFEContract[i]);
+    }
+    m_ExchangeMap.insert(pair<const char*, vector<char*> >("SHFE", m_SHFEList));
 }
 
 QuoteSpi::~QuoteSpi(void)
@@ -60,8 +87,8 @@ void QuoteSpi::Run()
     strcpy(stContract.ContractNo1, "2301");
     stContract.CallOrPutFlag1 = TAPI_CALLPUT_FLAG_NONE;
     stContract.CallOrPutFlag2 = TAPI_CALLPUT_FLAG_NONE;
-    m_uiSessionID = 0;
     iErr = m_pAPI->SubscribeQuote(&m_uiSessionID, &stContract);
+    m_uiSessionID += 1;
     if(TAPIERROR_SUCCEED != iErr) {
         cout << "SubscribeQuote Error:" << iErr <<endl;
         return;
@@ -71,6 +98,36 @@ void QuoteSpi::Run()
         m_Event.WaitEvent();
     }
 }
+
+int QuoteSpi::SubscribeQuote(string contract)
+{
+    regex pattern("([a-zA-Z]+)");
+    smatch result;
+    if (regex_search(contract, result, pattern))
+    {
+        auto contractNo = result[0];
+        cout << "这里 " << contractNo << endl;
+        for (map< const char*, vector<char*> >::iterator it = m_ExchangeMap.begin(); it != m_ExchangeMap.end(); it++)
+        {
+            for (vector<char*>::iterator iter = it->second.begin(); iter != it->second.end(); iter++)
+            {
+                if (contractNo == *iter)
+                {
+                    cout << it->first << endl;
+                    cout << contractNo << endl;
+                }
+            }
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    // map< const char*, vector<char*> >::iterator it = m_ExchangeMap.find(contract);
+
+    return 0;
+}
+
 
 int QuoteSpi::Init()
 {
@@ -91,6 +148,7 @@ int QuoteSpi::Init()
     }
 
     m_pAPI->SetAPINotify(this); // 注册Spi实现的类
+    SubscribeQuote("RB2210");
     Run();
 
     return 0;

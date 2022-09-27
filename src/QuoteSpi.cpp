@@ -36,6 +36,92 @@ QuoteSpi::QuoteSpi(void):
         m_SHFEList.push_back(SHFEContract[i]);
     }
     m_ExchangeMap.insert(pair<const char*, vector<char*> >("SHFE", m_SHFEList));
+
+    char* m_CZCEContract[] = {
+            (char*)"AP",     /// Æ»¹û
+            (char*)"CF",     /// ÃÞ»¨
+            (char*)"CJ",     /// ºìÔæ
+            (char*)"CY",     /// ÃÞÉ´
+            (char*)"FG",     /// ²£Á§
+            (char*)"JR",     /// ¾¬µ¾
+            (char*)"LR",     /// ÍíôÌµ¾
+            (char*)"MA",     /// ¼×´¼
+            (char*)"OI",     /// ²ËÓÍ
+            (char*)"PF",     /// ¶ÌÏË
+            (char*)"PK",     /// »¨Éú
+            (char*)"PM",     /// ÆÕÂó
+            (char*)"RI",     /// ÔçôÌµ¾
+            (char*)"RM",     /// ²ËÆÉ
+            (char*)"RS",     /// ²Ë×Ñ
+            (char*)"SA",     /// ´¿¼î
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+            (char*)"",     ///
+    };
+    for (int i = 0; i < sizeof(m_CZCEContract) / sizeof(m_CZCEContract[0]); i++)
+    {
+        m_CZCEList.push_back(m_CZCEContract[i]);
+    }
+    m_ExchangeMap.insert(pair<const char*, vector<char*> >("CZCE", m_CZCEList));
+/*
+    char* m_DCEList[] = {
+            (char*)"AG",
+            (char*)"AL",
+            (char*)"AU",
+            (char*)"BU",
+            (char*)"CU",
+            (char*)"FU",
+            (char*)"HC",
+            (char*)"NI",
+            (char*)"PB",
+            (char*)"RB",
+            (char*)"RU",
+            (char*)"SN",
+            (char*)"SP",
+            (char*)"SS",
+            (char*)"WR",
+            (char*)"ZN",
+    };
+    for (int i = 0; i < sizeof(SHFEContract) / sizeof(SHFEContract[0]); i++)
+    {
+        m_SHFEList.push_back(SHFEContract[i]);
+    }
+    m_ExchangeMap.insert(pair<const char*, vector<char*> >("SHFE", m_SHFEList));
+
+    char* m_CFFEXList[] = {
+            (char*)"AG",
+            (char*)"AL",
+            (char*)"AU",
+            (char*)"BU",
+            (char*)"CU",
+            (char*)"FU",
+            (char*)"HC",
+            (char*)"NI",
+            (char*)"PB",
+            (char*)"RB",
+            (char*)"RU",
+            (char*)"SN",
+            (char*)"SP",
+            (char*)"SS",
+            (char*)"WR",
+            (char*)"ZN",
+    };
+    for (int i = 0; i < sizeof(SHFEContract) / sizeof(SHFEContract[0]); i++)
+    {
+        m_SHFEList.push_back(SHFEContract[i]);
+    }
+    m_ExchangeMap.insert(pair<const char*, vector<char*> >("SHFE", m_SHFEList));*/
 }
 
 QuoteSpi::~QuoteSpi(void)
@@ -77,44 +163,46 @@ void QuoteSpi::Run()
     if (!m_bIsAPIReady){
         return;
     }
-
-    //¶©ÔÄÐÐÇé
-    TapAPIContract stContract;
-    memset(&stContract, 0, sizeof(stContract));
-    strcpy(stContract.Commodity.ExchangeNo, "SHFE");
-    stContract.Commodity.CommodityType = TAPI_COMMODITY_TYPE_FUTURES;
-    strcpy(stContract.Commodity.CommodityNo, "RB");
-    strcpy(stContract.ContractNo1, "2301");
-    stContract.CallOrPutFlag1 = TAPI_CALLPUT_FLAG_NONE;
-    stContract.CallOrPutFlag2 = TAPI_CALLPUT_FLAG_NONE;
-    iErr = m_pAPI->SubscribeQuote(&m_uiSessionID, &stContract);
-    m_uiSessionID += 1;
-    if(TAPIERROR_SUCCEED != iErr) {
-        cout << "SubscribeQuote Error:" << iErr <<endl;
-        return;
-    }
-
-    while(true) {
-        m_Event.WaitEvent();
-    }
 }
 
 int QuoteSpi::SubscribeQuote(string contract)
 {
-    regex pattern("([a-zA-Z]+)");
+    TAPIINT32 iErr = TAPIERROR_SUCCEED;
+    char contractNum[8];
     smatch result;
-    if (regex_search(contract, result, pattern))
+    regex pattern_num("(\\d+)");
+    if (regex_search(contract, result, pattern_num))
+    {
+        string a = result[0];
+        strcpy(contractNum, a.c_str());
+    }
+    regex pattern_English("([a-zA-Z]+)");
+
+    if (regex_search(contract, result, pattern_English))
     {
         auto contractNo = result[0];
-        cout << "ÕâÀï " << contractNo << endl;
         for (map< const char*, vector<char*> >::iterator it = m_ExchangeMap.begin(); it != m_ExchangeMap.end(); it++)
         {
             for (vector<char*>::iterator iter = it->second.begin(); iter != it->second.end(); iter++)
             {
                 if (contractNo == *iter)
                 {
-                    cout << it->first << endl;
-                    cout << contractNo << endl;
+                    //¶©ÔÄÐÐÇé
+                    TapAPIContract stContract;
+                    memset(&stContract, 0, sizeof(stContract));
+                    strcpy(stContract.Commodity.ExchangeNo, it->first);
+                    stContract.Commodity.CommodityType = TAPI_COMMODITY_TYPE_FUTURES;
+                    strcpy(stContract.Commodity.CommodityNo, *iter);
+                    strcpy(stContract.ContractNo1, contractNum);
+                    stContract.CallOrPutFlag1 = TAPI_CALLPUT_FLAG_NONE;
+                    stContract.CallOrPutFlag2 = TAPI_CALLPUT_FLAG_NONE;
+                    iErr = m_pAPI->SubscribeQuote(&m_uiSessionID, &stContract);
+                    m_uiSessionID += 1;
+                    if(TAPIERROR_SUCCEED != iErr) {
+                        cout << "SubscribeQuote Error:" << iErr <<endl;
+                        return -1;
+                    }
+
                 }
             }
         }
@@ -123,11 +211,9 @@ int QuoteSpi::SubscribeQuote(string contract)
     {
         return -1;
     }
-    // map< const char*, vector<char*> >::iterator it = m_ExchangeMap.find(contract);
 
     return 0;
 }
-
 
 int QuoteSpi::Init()
 {
@@ -148,9 +234,11 @@ int QuoteSpi::Init()
     }
 
     m_pAPI->SetAPINotify(this); // ×¢²áSpiÊµÏÖµÄÀà
-    SubscribeQuote("RB2210");
     Run();
-
+    SubscribeQuote("RB2301");
+    while(true) {
+        m_Event.WaitEvent();
+    }
     return 0;
 }
 

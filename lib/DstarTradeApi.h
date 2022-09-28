@@ -1,4 +1,4 @@
-`///@system  Dstar V10
+///@system  Dstar V10
 ///@file    DstarTradeApi.h
 ///@author  Hao Lin 2020-08-20
 

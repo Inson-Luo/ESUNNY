@@ -26,7 +26,7 @@ public:
 public:
     struct QuoteStruct
     {
-        TAPICHAR                IP[64];                   ///< 行情前置IP地址
+        TAPICHAR                IP[21];                   ///< 行情前置IP地址
         TAPIUINT16              Port;                     ///< 行情前置端口
         TAPISTR_20			    UserNo;					  ///< 用户名
         TAPIYNFLAG			    ISModifyPassword;		  ///< 是否修改密码，'Y'表示是，'N'表示否

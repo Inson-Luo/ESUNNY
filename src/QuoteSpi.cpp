@@ -225,9 +225,7 @@ int QuoteSpi::Init()
     m_pAPI->SetAPINotify(this); // 注册Spi实现的类
     Run();
     SubscribeQuote("RB2301");
-    while(true) {
-        m_Event.WaitEvent();
-    }
+
     return 0;
 }
 

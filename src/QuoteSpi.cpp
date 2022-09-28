@@ -14,22 +14,22 @@ QuoteSpi::QuoteSpi(void):
 
 {
     char* SHFEContract[] = {
-            (char*)"AG",
-            (char*)"AL",
-            (char*)"AU",
-            (char*)"BU",
-            (char*)"CU",
-            (char*)"FU",
-            (char*)"HC",
-            (char*)"NI",
-            (char*)"PB",
-            (char*)"RB",
-            (char*)"RU",
-            (char*)"SN",
-            (char*)"SP",
-            (char*)"SS",
-            (char*)"WR",
-            (char*)"ZN",
+            (char*)"AG",     /// »¦Òø
+            (char*)"AL",     /// »¦ÂÁ
+            (char*)"AU",     /// »¦½ð
+            (char*)"BU",     /// Ê¯ÓÍÁ¤Çà
+            (char*)"CU",     /// »¦Í­
+            (char*)"FU",     /// È¼ÓÍ
+            (char*)"HC",     /// ÈÈÔþ¾í°å
+            (char*)"NI",     /// »¦Äø
+            (char*)"PB",     /// »¦Ç¦
+            (char*)"RB",     /// ÂÝÎÆ¸Ö
+            (char*)"RU",     /// Ïð½º
+            (char*)"SN",     /// »¦Îý
+            (char*)"SP",     /// Ö½½¬
+            (char*)"SS",     /// ²»Ðâ¸Ö
+            (char*)"WR",     /// Ïß²Ä
+            (char*)"ZN",     /// »¦Ð¿
     };
     for (int i = 0; i < sizeof(SHFEContract) / sizeof(SHFEContract[0]); i++)
     {
@@ -37,7 +37,7 @@ QuoteSpi::QuoteSpi(void):
     }
     m_ExchangeMap.insert(pair<const char*, vector<char*> >("SHFE", m_SHFEList));
 
-    char* m_CZCEContract[] = {
+    char* CZCEContract[] = {
             (char*)"AP",     /// Æ»¹û
             (char*)"CF",     /// ÃÞ»¨
             (char*)"CJ",     /// ºìÔæ
@@ -54,74 +54,63 @@ QuoteSpi::QuoteSpi(void):
             (char*)"RM",     /// ²ËÆÉ
             (char*)"RS",     /// ²Ë×Ñ
             (char*)"SA",     /// ´¿¼î
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
-            (char*)"",     ///
+            (char*)"SF",     /// ¹èÌú
+            (char*)"SM",     /// ÃÌ¹è
+            (char*)"SR",     /// °×ÌÇ
+            (char*)"TA",     /// PTA
+            (char*)"UR",     /// ÄòËØ
+            (char*)"WH",     /// Ç¿Âó
+            (char*)"ZC",     /// ¶¯Á¦Ãº
     };
-    for (int i = 0; i < sizeof(m_CZCEContract) / sizeof(m_CZCEContract[0]); i++)
+    for (int i = 0; i < sizeof(CZCEContract) / sizeof(CZCEContract[0]); i++)
     {
-        m_CZCEList.push_back(m_CZCEContract[i]);
+        m_CZCEList.push_back(CZCEContract[i]);
     }
     m_ExchangeMap.insert(pair<const char*, vector<char*> >("CZCE", m_CZCEList));
-/*
-    char* m_DCEList[] = {
-            (char*)"AG",
-            (char*)"AL",
-            (char*)"AU",
-            (char*)"BU",
-            (char*)"CU",
-            (char*)"FU",
-            (char*)"HC",
-            (char*)"NI",
-            (char*)"PB",
-            (char*)"RB",
-            (char*)"RU",
-            (char*)"SN",
-            (char*)"SP",
-            (char*)"SS",
-            (char*)"WR",
-            (char*)"ZN",
-    };
-    for (int i = 0; i < sizeof(SHFEContract) / sizeof(SHFEContract[0]); i++)
-    {
-        m_SHFEList.push_back(SHFEContract[i]);
-    }
-    m_ExchangeMap.insert(pair<const char*, vector<char*> >("SHFE", m_SHFEList));
 
-    char* m_CFFEXList[] = {
-            (char*)"AG",
-            (char*)"AL",
-            (char*)"AU",
-            (char*)"BU",
-            (char*)"CU",
-            (char*)"FU",
-            (char*)"HC",
-            (char*)"NI",
-            (char*)"PB",
-            (char*)"RB",
-            (char*)"RU",
-            (char*)"SN",
-            (char*)"SP",
-            (char*)"SS",
-            (char*)"WR",
-            (char*)"ZN",
+    char* DCEContract[] = {
+            (char*)"A",      /// ¶¹Ò»
+            (char*)"B",      /// ¶¹¶þ
+            (char*)"BB",     /// ½ººÏ°å
+            (char*)"C",      /// ÓñÃ×
+            (char*)"CS",     /// ÓñÃ×µí·Û
+            (char*)"EB",     /// ±½ÒÒÏ©
+            (char*)"EG",     /// ÒÒ¶þ´¼
+            (char*)"FB",     /// ÏËÎ¬°å
+            (char*)"I",      /// Ìú¿óÊ¯
+            (char*)"J",      /// ½¹Ì¿
+            (char*)"JD",     /// ¼¦µ°
+            (char*)"JM",     /// ½¹Ãº
+            (char*)"L",      /// ¾ÛÒÒÏ©
+            (char*)"LH",     /// ÉúÖí
+            (char*)"M",      /// ¶¹ÆÉ
+            (char*)"P",      /// ×ØéµÓÍ
+            (char*)"PG",     /// LPG(Òº»¯Ê¯ÓÍÆø)
+            (char*)"PP",     /// ¾Û±ûÏ©
+            (char*)"RR",     /// ¾¬Ã×
+            (char*)"V",      /// ¾ÛÂÈÒÒÏ©
+            (char*)"Y",      /// ¶¹ÓÍ
     };
-    for (int i = 0; i < sizeof(SHFEContract) / sizeof(SHFEContract[0]); i++)
+    for (int i = 0; i < sizeof(DCEContract) / sizeof(DCEContract[0]); i++)
     {
-        m_SHFEList.push_back(SHFEContract[i]);
+        m_DCEList.push_back(DCEContract[i]);
     }
-    m_ExchangeMap.insert(pair<const char*, vector<char*> >("SHFE", m_SHFEList));*/
+    m_ExchangeMap.insert(pair<const char*, vector<char*> >("DCE", m_DCEList));
+
+    char* CFFEXContract[] = {
+            (char*)"IC",     /// ÖÐÖ¤500
+            (char*)"IF",     /// »¦Éî
+            (char*)"IH",     /// ÉÏÖ¤
+            (char*)"IM",     /// ÖÐÖ¤1000
+            (char*)"TS",     /// ¶þÕ®
+            (char*)"TF",     /// ÎåÕ®
+            (char*)"T",      /// Ê®Õ®
+    };
+    for (int i = 0; i < sizeof(CFFEXContract) / sizeof(CFFEXContract[0]); i++)
+    {
+        m_CFFEXList.push_back(CFFEXContract[i]);
+    }
+    m_ExchangeMap.insert(pair<const char*, vector<char*> >("CFFEX", m_CFFEXList));
 }
 
 QuoteSpi::~QuoteSpi(void)

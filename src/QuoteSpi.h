@@ -24,7 +24,7 @@ public:
     int Init();
 
 public:
-    typedef struct QuoteStruct
+    struct QuoteStruct
     {
         TAPICHAR                IP[64];                   ///< 行情前置IP地址
         TAPIUINT16              Port;                     ///< 行情前置端口

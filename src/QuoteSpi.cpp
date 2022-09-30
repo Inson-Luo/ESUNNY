@@ -37,7 +37,7 @@ QuoteSpi::QuoteSpi(void):
     }
     m_ExchangeMap.insert(pair<const char*, vector<char*> >("SHFE", m_SHFEList));
 
-    char* CZCEContract[] = {
+    char* ZCEContract[] = {
             (char*)"AP",     /// 苹果
             (char*)"CF",     /// 棉花
             (char*)"CJ",     /// 红枣
@@ -62,11 +62,11 @@ QuoteSpi::QuoteSpi(void):
             (char*)"WH",     /// 强麦
             (char*)"ZC",     /// 动力煤
     };
-    for (int i = 0; i < sizeof(CZCEContract) / sizeof(CZCEContract[0]); i++)
+    for (int i = 0; i < sizeof(ZCEContract) / sizeof(ZCEContract[0]); i++)
     {
-        m_CZCEList.push_back(CZCEContract[i]);
+        m_ZCEList.push_back(ZCEContract[i]);
     }
-    m_ExchangeMap.insert(pair<const char*, vector<char*> >("CZCE", m_CZCEList));
+    m_ExchangeMap.insert(pair<const char*, vector<char*> >("ZCE", m_ZCEList));
 
     char* DCEContract[] = {
             (char*)"A",      /// 豆一
@@ -111,6 +111,7 @@ QuoteSpi::QuoteSpi(void):
         m_CFFEXList.push_back(CFFEXContract[i]);
     }
     m_ExchangeMap.insert(pair<const char*, vector<char*> >("CFFEX", m_CFFEXList));
+
 }
 
 QuoteSpi::~QuoteSpi(void)
@@ -152,6 +153,11 @@ void QuoteSpi::Run()
     if (!m_bIsAPIReady){
         return;
     }
+
+    // 查询合约品种
+    QryCommodity();
+    m_Event.WaitEvent();
+
 }
 
 int QuoteSpi::SubscribeQuote(string contract)
@@ -204,6 +210,12 @@ int QuoteSpi::SubscribeQuote(string contract)
     return 0;
 }
 
+int QuoteSpi::QryCommodity()
+{
+    m_pAPI->QryCommodity(&m_uiSessionID);
+    return 0;
+}
+
 int QuoteSpi::Init()
 {
     cout << "--->>> " << "QuoteSpi::Init" << " <<<---" << endl;
@@ -224,7 +236,7 @@ int QuoteSpi::Init()
 
     m_pAPI->SetAPINotify(this); // 注册Spi实现的类
     Run();
-    SubscribeQuote("RB2301");
+
 
     return 0;
 }
@@ -235,7 +247,6 @@ void TAP_CDECL QuoteSpi::OnRspLogin(TAPIINT32 errorCode, const TapAPIQuotLoginRs
     if(TAPIERROR_SUCCEED == errorCode) {
         cout << "登录成功，等待API初始化..." << endl;
         m_bIsAPIReady = true;
-
     } else {
         cout << "登录失败，错误码:" << errorCode << endl;
         m_Event.SignalEvent();
@@ -246,6 +257,7 @@ void TAP_CDECL QuoteSpi::OnAPIReady()
 {
     cout << "--->>> " << "QuoteSpi::OnAPIReady" << " <<<---" << endl;
     cout << "API初始化完成" << endl;
+    m_bIsAPIReady = true;
     m_Event.SignalEvent();
 }
 
@@ -257,7 +269,23 @@ void TAP_CDECL QuoteSpi::OnDisconnect(TAPIINT32 reasonCode)
 
 void TAP_CDECL QuoteSpi::OnRspQryCommodity(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPIQuoteCommodityInfo *info)
 {
+    /*
     cout << "--->>> " << "QuoteSpi::OnRspQryCommodity" << " <<<---" << endl;
+    cout << "品种编号 " << info->Commodity.CommodityNo << " "
+    << "交易所编码 " << info->Commodity.ExchangeNo << " "
+    << "标志 " << isLast << " "
+    << endl;*/
+
+
+    if (errorCode !=0 or isLast == APIYNFLAG_YES)
+    {
+        for (map< const char*, vector<char*> >::iterator it = m_ExchangeMap.begin(); it != m_ExchangeMap.end(); it++)
+        {
+            cout << "key = " << it->first << endl;
+        }
+        cout << endl;
+        m_Event.SignalEvent();
+    }
 }
 
 void TAP_CDECL QuoteSpi::OnRspQryContract(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPIQuoteContractInfo *info)

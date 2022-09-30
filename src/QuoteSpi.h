@@ -21,6 +21,8 @@ public:
 
     int SubscribeQuote(string contract);
 
+    int QryCommodity();
+
     int Init();
 
 public:
@@ -127,11 +129,11 @@ public:
 
 private:
 	ITapQuoteAPI*  m_pAPI;
-	TAPIUINT32	   m_uiSessionID;
+    TAPIUINT32	   m_uiSessionID;
     SimpleEvent    m_Event;
 	bool		   m_bIsAPIReady;
     vector<char*>  m_SHFEList;
-    vector<char*>  m_CZCEList;
+    vector<char*>  m_ZCEList;
     vector<char*>  m_DCEList;
     vector<char*>  m_CFFEXList;
     map< const char*, vector<char*> > m_ExchangeMap;

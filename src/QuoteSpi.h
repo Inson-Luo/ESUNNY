@@ -21,6 +21,10 @@ public:
 
     int SubscribeQuote(string contract);
 
+    int SubscribeQuote(string contract1, string contract2);
+
+    vector<string> GetContractData(string contract);
+
     int QryCommodity();
 
     int Init();
@@ -40,7 +44,6 @@ public:
         TAPIAUTHCODE            AuthCode;				  ///< 授权码
         TAPISTR_300				KeyOperationLogPath;      ///< 关键操作日志路径
     };
-
     QuoteStruct quoteLoginMsg;
 
 public:
@@ -137,6 +140,7 @@ private:
     vector<char*>  m_DCEList;
     vector<char*>  m_CFFEXList;
     map< const char*, vector<char*> > m_ExchangeMap;
+
 
 };
 #endif //ESUNNY_QUOTESPI_H

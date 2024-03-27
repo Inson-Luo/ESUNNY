@@ -160,6 +160,13 @@ void QuoteSpi::Run()
 
 }
 
+vector<string> QuoteSpi::GetContractData(string contract)
+{
+    vector<string> contractData;
+
+    return contractData;
+}
+
 int QuoteSpi::SubscribeQuote(string contract)
 {
     TAPIINT32 iErr = TAPIERROR_SUCCEED;
@@ -210,6 +217,11 @@ int QuoteSpi::SubscribeQuote(string contract)
     return 0;
 }
 
+int QuoteSpi::SubscribeQuote(string contract1, string contract2)
+{
+
+}
+
 int QuoteSpi::QryCommodity()
 {
     m_pAPI->QryCommodity(&m_uiSessionID);
@@ -245,10 +257,10 @@ void TAP_CDECL QuoteSpi::OnRspLogin(TAPIINT32 errorCode, const TapAPIQuotLoginRs
 {
     cout << "--->>> " << "QuoteSpi::OnRspLogin" << " <<<---" << endl;
     if(TAPIERROR_SUCCEED == errorCode) {
-        cout << "登录成功，等待API初始化..." << endl;
+        cout << "Login Success, waiting API init..." << endl;
         m_bIsAPIReady = true;
     } else {
-        cout << "登录失败，错误码:" << errorCode << endl;
+        cout << "Login Fail, errorCode is " << errorCode << endl;
         m_Event.SignalEvent();
     }
 }
@@ -256,8 +268,10 @@ void TAP_CDECL QuoteSpi::OnRspLogin(TAPIINT32 errorCode, const TapAPIQuotLoginRs
 void TAP_CDECL QuoteSpi::OnAPIReady()
 {
     cout << "--->>> " << "QuoteSpi::OnAPIReady" << " <<<---" << endl;
-    cout << "API初始化完成" << endl;
+    cout << "API finish to init" << endl;
     m_bIsAPIReady = true;
+    SubscribeQuote("RB2310");
+    //SubscribeQuote("RB2305");
     m_Event.SignalEvent();
 }
 
@@ -276,7 +290,7 @@ void TAP_CDECL QuoteSpi::OnRspQryCommodity(TAPIUINT32 sessionID, TAPIINT32 error
     << "标志 " << isLast << " "
     << endl;*/
 
-
+    /*
     if (errorCode !=0 or isLast == APIYNFLAG_YES)
     {
         for (map< const char*, vector<char*> >::iterator it = m_ExchangeMap.begin(); it != m_ExchangeMap.end(); it++)
@@ -285,7 +299,7 @@ void TAP_CDECL QuoteSpi::OnRspQryCommodity(TAPIUINT32 sessionID, TAPIINT32 error
         }
         cout << endl;
         m_Event.SignalEvent();
-    }
+    }*/
 }
 
 void TAP_CDECL QuoteSpi::OnRspQryContract(TAPIUINT32 sessionID, TAPIINT32 errorCode, TAPIYNFLAG isLast, const TapAPIQuoteContractInfo *info)
